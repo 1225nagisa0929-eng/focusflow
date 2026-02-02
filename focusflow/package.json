@@ -1,0 +1,31 @@
+{
+  "name": "focusflow",
+  "version": "1.1.0",
+  "description": "ADHD-friendly focus timer designed for neurodivergent minds",
+  "main": "index.html",
+  "type": "module",
+  "scripts": {
+    "start": "npx serve .",
+    "dev": "npx serve . -l 3000",
+    "build": "echo 'Static site - no build needed'",
+    "vercel-build": "echo 'Static site - no build needed'"
+  },
+  "keywords": [
+    "adhd",
+    "focus",
+    "timer",
+    "pomodoro",
+    "productivity",
+    "neurodivergent",
+    "pwa",
+    "ai"
+  ],
+  "author": "",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "dependencies": {
+    "@google/generative-ai": "^0.21.0"
+  }
+}
