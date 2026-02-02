@@ -46,19 +46,78 @@ class FocusFlowApp {
             }
         });
 
-        // Smooth scroll for nav links
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        // Logo click - return to top/landing
+        const navBrand = document.querySelector('.nav-brand');
+        if (navBrand) {
+            navBrand.addEventListener('click', (e) => {
+                e.preventDefault();
+                if (this.currentView === 'timer') {
+                    this.showLanding();
+                }
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+        }
+
+        // Nav links with timer view handling
+        document.querySelectorAll('.nav-link').forEach(anchor => {
             anchor.addEventListener('click', (e) => {
                 const targetId = anchor.getAttribute('href');
-                if (targetId === '#') return;
+                if (targetId === '#' || !targetId) return;
 
-                const target = document.querySelector(targetId);
-                if (target) {
-                    e.preventDefault();
-                    target.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start'
-                    });
+                e.preventDefault();
+
+                // If in timer view, switch to landing first
+                if (this.currentView === 'timer') {
+                    this.showLanding(true);
+                    // Wait for DOM update then scroll
+                    setTimeout(() => {
+                        const target = document.querySelector(targetId);
+                        if (target) {
+                            target.scrollIntoView({
+                                behavior: 'smooth',
+                                block: 'start'
+                            });
+                        }
+                    }, 100);
+                } else {
+                    const target = document.querySelector(targetId);
+                    if (target) {
+                        target.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                }
+            });
+        });
+
+        // Footer links with same behavior
+        document.querySelectorAll('.footer-links a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', (e) => {
+                const targetId = anchor.getAttribute('href');
+                if (targetId === '#' || !targetId) return;
+
+                e.preventDefault();
+
+                if (this.currentView === 'timer') {
+                    this.showLanding(true);
+                    setTimeout(() => {
+                        const target = document.querySelector(targetId);
+                        if (target) {
+                            target.scrollIntoView({
+                                behavior: 'smooth',
+                                block: 'start'
+                            });
+                        }
+                    }, 100);
+                } else {
+                    const target = document.querySelector(targetId);
+                    if (target) {
+                        target.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
                 }
             });
         });
@@ -69,6 +128,18 @@ class FocusFlowApp {
                 this.showTimer(false);
             } else {
                 this.showLanding(false);
+            }
+        });
+
+        // Scroll effect for nav glassmorphism
+        window.addEventListener('scroll', () => {
+            const nav = document.querySelector('.nav');
+            if (nav) {
+                if (window.scrollY > 50) {
+                    nav.classList.add('scrolled');
+                } else {
+                    nav.classList.remove('scrolled');
+                }
             }
         });
     }
