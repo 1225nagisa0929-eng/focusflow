@@ -31,6 +31,7 @@ class FocusTimer {
             startBtn: document.getElementById('start-btn'),
             pauseBtn: document.getElementById('pause-btn'),
             skipBtn: document.getElementById('skip-btn'),
+            stuckBtn: document.getElementById('stuck-btn'),
             modeBadge: document.getElementById('mode-badge'),
             sessionCount: document.getElementById('session-count'),
             progressCircle: document.getElementById('progress-circle'),
@@ -69,6 +70,9 @@ class FocusTimer {
 
         // Skip button
         this.elements.skipBtn.addEventListener('click', () => this.skip());
+
+        // I'm stuck button
+        this.elements.stuckBtn?.addEventListener('click', () => this.getUnstuck());
 
         // Quick adjust buttons
         document.querySelectorAll('.adjust-btn').forEach(btn => {
@@ -139,6 +143,59 @@ class FocusTimer {
 
         // Update document title
         this.updateTitle();
+    }
+
+    // Fetch "Get Unstuck" suggestion from Gemini API
+    async getUnstuck() {
+        const taskName = this.elements.taskInput?.value?.trim() || '';
+
+        // Show loading state in AI message bubble
+        if (this.elements.aiMessage) {
+            this.elements.aiMessage.classList.add('show', 'loading');
+            if (this.elements.aiMessageText) {
+                this.elements.aiMessageText.textContent = '🤔 Finding a tiny first step...';
+            }
+        }
+
+        try {
+            const response = await fetch('/api/get-unstuck', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ taskName })
+            });
+
+            if (!response.ok) {
+                throw new Error('API request failed');
+            }
+
+            const data = await response.json();
+
+            // Display the suggestion
+            if (this.elements.aiMessage && this.elements.aiMessageText) {
+                this.elements.aiMessage.classList.remove('loading');
+                this.elements.aiMessageText.textContent = `💡 ${data.message}`;
+
+                // Keep visible longer for stuck users
+                setTimeout(() => {
+                    this.elements.aiMessage.classList.remove('show');
+                }, 15000);
+            }
+
+        } catch (error) {
+            console.error('Failed to fetch unstuck suggestion:', error);
+
+            // Show fallback message
+            if (this.elements.aiMessage && this.elements.aiMessageText) {
+                this.elements.aiMessage.classList.remove('loading');
+                this.elements.aiMessageText.textContent = '💡 Just open it. 📂';
+
+                setTimeout(() => {
+                    this.elements.aiMessage.classList.remove('show');
+                }, 15000);
+            }
+        }
     }
 
     // Fetch AI-generated encouragement message from Gemini API

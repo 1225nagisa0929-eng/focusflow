@@ -472,6 +472,36 @@ body.ambient-long-break {
     gap: var(--space-md);
 }
 
+.timer-controls-secondary {
+    display: flex;
+    align-items: center;
+    gap: var(--space-lg);
+}
+
+/* I'm Stuck Button - subtle, non-intrusive design */
+.btn-stuck {
+    background: transparent;
+    color: var(--gray-400);
+    font-size: var(--font-size-sm);
+    font-weight: 400;
+    padding: var(--space-sm) var(--space-md);
+    border: 1px dashed var(--gray-300);
+    border-radius: var(--radius-full);
+    opacity: 0.7;
+    transition: all var(--transition-base);
+}
+
+.btn-stuck:hover {
+    opacity: 1;
+    color: var(--gray-600);
+    border-color: var(--gray-400);
+    background: var(--gray-50);
+}
+
+.btn-stuck:active {
+    transform: scale(0.98);
+}
+
 /* Quick Adjust (ADHD Feature) */
 .quick-adjust {
     text-align: center;
