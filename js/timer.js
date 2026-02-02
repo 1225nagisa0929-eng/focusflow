@@ -35,7 +35,9 @@ class FocusTimer {
             sessionCount: document.getElementById('session-count'),
             progressCircle: document.getElementById('progress-circle'),
             motivationMessage: document.getElementById('motivation-message'),
-            taskInput: document.getElementById('task-input')
+            taskInput: document.getElementById('task-input'),
+            aiMessage: document.getElementById('ai-message'),
+            aiMessageText: document.getElementById('ai-message-text')
         };
 
         // Interval reference
@@ -120,6 +122,9 @@ class FocusTimer {
         // Show encouraging message
         this.showMotivation(this.getStartMessage());
 
+        // Fetch AI encouragement message
+        this.fetchAIMessage();
+
         // Start the countdown
         this.timerInterval = setInterval(() => this.tick(), 1000);
 
@@ -128,6 +133,59 @@ class FocusTimer {
 
         // Update document title
         this.updateTitle();
+    }
+
+    // Fetch AI-generated encouragement message from Gemini API
+    async fetchAIMessage() {
+        const taskName = this.elements.taskInput?.value?.trim() || '';
+
+        // Show loading state
+        if (this.elements.aiMessage) {
+            this.elements.aiMessage.classList.add('show', 'loading');
+            if (this.elements.aiMessageText) {
+                this.elements.aiMessageText.textContent = '🤖 AIが応援メッセージを考え中...';
+            }
+        }
+
+        try {
+            const response = await fetch('/api/generate-message', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ taskName })
+            });
+
+            if (!response.ok) {
+                throw new Error('API request failed');
+            }
+
+            const data = await response.json();
+
+            // Display the AI message
+            if (this.elements.aiMessage && this.elements.aiMessageText) {
+                this.elements.aiMessage.classList.remove('loading');
+                this.elements.aiMessageText.textContent = `🤖 ${data.message}`;
+
+                // Hide after 10 seconds
+                setTimeout(() => {
+                    this.elements.aiMessage.classList.remove('show');
+                }, 10000);
+            }
+
+        } catch (error) {
+            console.error('Failed to fetch AI message:', error);
+
+            // Show fallback message
+            if (this.elements.aiMessage && this.elements.aiMessageText) {
+                this.elements.aiMessage.classList.remove('loading');
+                this.elements.aiMessageText.textContent = '🤖 まず1分だけ試そう🌱';
+
+                setTimeout(() => {
+                    this.elements.aiMessage.classList.remove('show');
+                }, 10000);
+            }
+        }
     }
 
     pause() {

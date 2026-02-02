@@ -596,6 +596,95 @@ body {
     margin-bottom: var(--space-md);
 }
 
+/* AI Message Bubble */
+.ai-message {
+    margin-top: var(--space-lg);
+    opacity: 0;
+    transform: translateY(10px) scale(0.95);
+    transition: all var(--transition-base);
+    pointer-events: none;
+}
+
+.ai-message.show {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    pointer-events: auto;
+}
+
+.ai-message-bubble {
+    position: relative;
+    background: linear-gradient(135deg, #e0f2fe 0%, #ddd6fe 100%);
+    border: 2px solid var(--primary-200);
+    border-radius: var(--radius-xl);
+    padding: var(--space-md) var(--space-lg);
+    max-width: 320px;
+    margin: 0 auto;
+    box-shadow: var(--shadow-md);
+}
+
+.ai-message-bubble::before {
+    content: '';
+    position: absolute;
+    top: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 0 10px 10px 10px;
+    border-style: solid;
+    border-color: transparent transparent var(--primary-200) transparent;
+}
+
+.ai-message-bubble::after {
+    content: '';
+    position: absolute;
+    top: -7px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 0 8px 8px 8px;
+    border-style: solid;
+    border-color: transparent transparent #e0f2fe transparent;
+}
+
+.ai-label {
+    display: block;
+    font-size: var(--font-size-xs);
+    font-weight: 600;
+    color: var(--primary-600);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: var(--space-xs);
+}
+
+#ai-message-text {
+    font-size: var(--font-size-lg);
+    font-weight: 500;
+    color: var(--gray-800);
+    margin: 0;
+    line-height: 1.4;
+}
+
+.ai-message.loading #ai-message-text {
+    animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+/* Dark mode AI message */
+.dark-mode .ai-message-bubble {
+    background: linear-gradient(135deg, #1e3a5f 0%, #312e81 100%);
+    border-color: var(--primary-400);
+}
+
+.dark-mode .ai-label {
+    color: var(--primary-300);
+}
+
+.dark-mode #ai-message-text {
+    color: var(--gray-100);
+}
+
 /* Features Section */
 .features {
     padding: var(--space-3xl) 0;
