@@ -46,6 +46,9 @@ class FocusTimer {
         // Progress ring circumference
         this.circumference = 2 * Math.PI * 90;
 
+        // Ambient background state
+        this.currentAmbientClass = null;
+
         // Initialize
         this.init();
     }
@@ -128,6 +131,9 @@ class FocusTimer {
         // Start the countdown
         this.timerInterval = setInterval(() => this.tick(), 1000);
 
+        // Set ambient background for focus start
+        this.updateAmbientBackground();
+
         // Save state
         this.saveState();
 
@@ -205,6 +211,9 @@ class FocusTimer {
         // Gentle message
         this.showMotivation('Taking a breather? That\'s okay! Resume when ready. 🌱');
 
+        // Reset ambient background on pause
+        this.setAmbientClass(null);
+
         // Save state
         this.saveState();
 
@@ -218,6 +227,7 @@ class FocusTimer {
             this.updateDisplay();
             this.updateProgress();
             this.updateTitle();
+            this.updateAmbientBackground();
 
             // Periodic encouragement (every 5 minutes)
             if (this.state.timeRemaining > 0 && this.state.timeRemaining % 300 === 0) {
@@ -330,6 +340,9 @@ class FocusTimer {
         clearInterval(this.timerInterval);
         this.state.isRunning = false;
 
+        // Reset ambient background
+        this.setAmbientClass(null);
+
         // Transition
         this.transitionToNextMode();
     }
@@ -375,6 +388,55 @@ class FocusTimer {
     setProgressRing() {
         this.elements.progressCircle.style.strokeDasharray = `${this.circumference}`;
         this.elements.progressCircle.style.strokeDashoffset = '0';
+    }
+
+    // Calm Technology: Update ambient background based on timer state
+    updateAmbientBackground() {
+        if (!this.state.isRunning) {
+            this.setAmbientClass(null);
+            return;
+        }
+
+        const progress = 1 - (this.state.timeRemaining / this.state.totalTime);
+
+        if (this.state.currentMode === 'focus') {
+            // Focus mode: transition from calm blue to warm orange as time runs out
+            if (progress < 0.5) {
+                // First half: calm blue
+                this.setAmbientClass('ambient-focus-start');
+            } else if (progress < 0.8) {
+                // Middle: neutral transition
+                this.setAmbientClass('ambient-focus-mid');
+            } else {
+                // Final stretch: warm orange to signal completion approaching
+                this.setAmbientClass('ambient-focus-end');
+            }
+        } else if (this.state.currentMode === 'shortBreak') {
+            this.setAmbientClass('ambient-break');
+        } else if (this.state.currentMode === 'longBreak') {
+            this.setAmbientClass('ambient-long-break');
+        }
+    }
+
+    setAmbientClass(className) {
+        // Remove all ambient classes
+        const ambientClasses = [
+            'ambient-focus-start',
+            'ambient-focus-mid',
+            'ambient-focus-end',
+            'ambient-break',
+            'ambient-long-break'
+        ];
+
+        if (this.currentAmbientClass !== className) {
+            ambientClasses.forEach(cls => document.body.classList.remove(cls));
+
+            if (className) {
+                document.body.classList.add(className);
+            }
+
+            this.currentAmbientClass = className;
+        }
     }
 
     updateTitle() {
@@ -504,6 +566,9 @@ class FocusTimer {
         this.elements.startBtn.innerHTML = '<span class="btn-icon">▶</span> Start Focus';
         this.elements.pauseBtn.style.display = 'none';
         document.title = 'FocusFlow - ADHD-Friendly Focus Timer';
+
+        // Reset ambient background
+        this.setAmbientClass(null);
     }
 }
 

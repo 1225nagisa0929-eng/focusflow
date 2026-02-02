@@ -70,16 +70,25 @@
     --radius-xl: 1rem;
     --radius-full: 9999px;
 
-    /* Shadows - soft for reduced visual noise */
-    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
-    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -1px rgba(0, 0, 0, 0.04);
-    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.04);
-    --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.08), 0 10px 10px -5px rgba(0, 0, 0, 0.02);
+    /* Shadows - ultra-soft for calm technology (minimal visual noise) */
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.015);
+    --shadow-md: 0 2px 6px rgba(0, 0, 0, 0.02), 0 1px 2px rgba(0, 0, 0, 0.01);
+    --shadow-lg: 0 4px 12px rgba(0, 0, 0, 0.025), 0 2px 4px rgba(0, 0, 0, 0.015);
+    --shadow-xl: 0 8px 24px rgba(0, 0, 0, 0.03), 0 4px 8px rgba(0, 0, 0, 0.015);
 
     /* Transitions - gentle, not jarring */
     --transition-fast: 150ms ease;
     --transition-base: 250ms ease;
     --transition-slow: 400ms ease;
+    --transition-ambient: 3000ms ease-in-out;
+
+    /* Ambient background colors for calm technology */
+    --ambient-neutral: #FAFBFC;
+    --ambient-focus-start: #F0F4FF;
+    --ambient-focus-mid: #F8F9FC;
+    --ambient-focus-end: #FFF4E0;
+    --ambient-break: #F0FFF4;
+    --ambient-long-break: #F0FCFF;
 }
 
 /* Dark mode variables */
@@ -113,10 +122,32 @@ body {
     font-size: var(--font-size-base);
     line-height: 1.6;
     color: var(--gray-800);
-    background: linear-gradient(135deg, var(--primary-50) 0%, #fff 50%, var(--gray-50) 100%);
+    background: var(--ambient-neutral);
     min-height: 100vh;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    transition: background-color var(--transition-ambient);
+}
+
+/* Ambient background states for calm technology */
+body.ambient-focus-start {
+    background: var(--ambient-focus-start);
+}
+
+body.ambient-focus-mid {
+    background: var(--ambient-focus-mid);
+}
+
+body.ambient-focus-end {
+    background: var(--ambient-focus-end);
+}
+
+body.ambient-break {
+    background: var(--ambient-break);
+}
+
+body.ambient-long-break {
+    background: var(--ambient-long-break);
 }
 
 .dark-mode body {
@@ -390,24 +421,24 @@ body {
 
 .progress-ring-bg {
     fill: none;
-    stroke: var(--gray-200);
-    stroke-width: 8;
+    stroke: var(--gray-100);
+    stroke-width: 3;
 }
 
 .progress-ring-circle {
     fill: none;
-    stroke: var(--primary-500);
-    stroke-width: 8;
+    stroke: #B4C6FC;
+    stroke-width: 3;
     stroke-linecap: round;
-    transition: stroke-dashoffset var(--transition-slow);
+    transition: stroke-dashoffset var(--transition-slow), stroke 1s ease;
 }
 
 .shortBreak .progress-ring-circle {
-    stroke: var(--success);
+    stroke: #A7F3D0;
 }
 
 .longBreak .progress-ring-circle {
-    stroke: #06b6d4;
+    stroke: #A5F3FC;
 }
 
 .timer-text {
@@ -523,12 +554,14 @@ body {
     transform: translateY(0);
 }
 
-/* Stats Sidebar */
+/* Stats Sidebar - calm technology: minimal shadows */
 .stats-sidebar {
-    background: white;
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(10px);
     border-radius: var(--radius-xl);
     padding: var(--space-xl);
-    box-shadow: var(--shadow-lg);
+    box-shadow: var(--shadow-sm);
+    border: 1px solid rgba(0, 0, 0, 0.04);
     height: fit-content;
     position: sticky;
     top: 100px;
@@ -546,10 +579,11 @@ body {
 
 .stat-card {
     padding: var(--space-md);
-    background: var(--gray-50);
+    background: rgba(249, 250, 251, 0.6);
     border-radius: var(--radius-md);
     margin-bottom: var(--space-md);
     text-align: center;
+    border: 1px solid rgba(0, 0, 0, 0.02);
 }
 
 .stat-value {
@@ -717,15 +751,16 @@ body {
 
 .feature-card {
     padding: var(--space-xl);
-    background: white;
+    background: rgba(255, 255, 255, 0.8);
     border-radius: var(--radius-xl);
-    box-shadow: var(--shadow-md);
+    box-shadow: var(--shadow-sm);
+    border: 1px solid rgba(0, 0, 0, 0.03);
     transition: transform var(--transition-base), box-shadow var(--transition-base);
 }
 
 .feature-card:hover {
-    transform: translateY(-4px);
-    box-shadow: var(--shadow-xl);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
 }
 
 .feature-icon {
