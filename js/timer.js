@@ -143,7 +143,7 @@ class FocusTimer {
         if (this.elements.aiMessage) {
             this.elements.aiMessage.classList.add('show', 'loading');
             if (this.elements.aiMessageText) {
-                this.elements.aiMessageText.textContent = '🤖 AIが応援メッセージを考え中...';
+                this.elements.aiMessageText.textContent = '🤖 AI is thinking of encouragement...';
             }
         }
 
@@ -179,7 +179,7 @@ class FocusTimer {
             // Show fallback message
             if (this.elements.aiMessage && this.elements.aiMessageText) {
                 this.elements.aiMessage.classList.remove('loading');
-                this.elements.aiMessageText.textContent = '🤖 まず1分だけ試そう🌱';
+                this.elements.aiMessageText.textContent = '🤖 Just try for 1 minute! 🌱';
 
                 setTimeout(() => {
                     this.elements.aiMessage.classList.remove('show');

@@ -28,7 +28,7 @@ export default async function handler(req, res) {
     if (!taskName || taskName.trim() === '') {
         // Return a default message if no task name provided
         return res.json({
-            message: '一歩ずつ、大丈夫！',
+            message: 'One step at a time! 🌱',
             source: 'default'
         });
     }
@@ -40,7 +40,7 @@ export default async function handler(req, res) {
         console.error('GEMINI_API_KEY not configured');
         // Return fallback message if API key not set
         return res.json({
-            message: '今日も頑張ろう！✨',
+            message: 'You got this! ✨',
             source: 'fallback'
         });
     }
@@ -51,22 +51,23 @@ export default async function handler(req, res) {
         const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
 
         // Create the prompt
-        const prompt = `あなたは、ADHDの傾向がある人を優しくサポートする励ましのエキスパートです。
+        const prompt = `You are an expert at gently supporting people with ADHD tendencies.
 
-ユーザーはこれから「${taskName}」というタスクを始めようとしています。
+The user is about to start a task called "${taskName}".
 
-以下の条件で、励ましメッセージを1つだけ生成してください：
-- 日本語で書く
-- 20文字以内（絵文字含む）
-- ハードルを下げる表現を使う（「まずは」「ちょっとだけ」など）
-- 優しく、プレッシャーを与えない
-- 絵文字を1つ含める
-- 「」や説明文は含めず、メッセージ本文のみを出力
+Generate ONE short encouragement message following these rules:
+- Respond in English, keep it under 20 words.
+- Use phrases that lower the barrier (e.g., "just for a minute", "start small")
+- Be gentle and avoid pressure
+- Include exactly one emoji
+- Output ONLY the message itself, no quotes or explanations
 
-例：
-- まず1分だけ！🌱
-- 深呼吸、そしてスタート✨
-- できるとこだけでOK💪`;
+Examples:
+- Just 1 minute to start! 🌱
+- Deep breath, then begin ✨
+- Do what you can, that's enough 💪
+- Small steps count! 🚀
+- You've already started by being here 🌟`;
 
         // Generate content
         const result = await model.generateContent(prompt);
@@ -92,11 +93,11 @@ export default async function handler(req, res) {
 
         // Return fallback messages based on common tasks
         const fallbackMessages = [
-            'まず1分だけ試そう🌱',
-            '小さく始めよう✨',
-            'できる範囲でOK💪',
-            '一歩ずつ、大丈夫🌈',
-            '今日のあなたならできる⭐'
+            'Just try for 1 minute! 🌱',
+            'Start small, win big ✨',
+            'Do what you can, that\'s enough 💪',
+            'One step at a time 🌈',
+            'You\'ve got this today! ⭐'
         ];
 
         const randomMessage = fallbackMessages[Math.floor(Math.random() * fallbackMessages.length)];
