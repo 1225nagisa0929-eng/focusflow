@@ -1,5 +1,5 @@
 /**
- * FocusFlow Timer Module
+ * Nudge Timer Module
  * ADHD-friendly timer with flexible adjustments and gentle transitions
  */
 
@@ -275,7 +275,7 @@ class FocusTimer {
         this.saveState();
 
         // Update title
-        document.title = 'Paused - FocusFlow';
+        document.title = 'Paused - Nudge';
     }
 
     tick() {
@@ -501,7 +501,7 @@ class FocusTimer {
         const seconds = this.state.timeRemaining % 60;
         const timeStr = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
         const modeStr = this.state.currentMode === 'focus' ? '🎯' : '☕';
-        document.title = `${timeStr} ${modeStr} FocusFlow`;
+        document.title = `${timeStr} ${modeStr} Nudge`;
     }
 
     showMotivation(message) {
@@ -622,7 +622,7 @@ class FocusTimer {
         this.elements.startBtn.style.display = 'inline-flex';
         this.elements.startBtn.innerHTML = '<span class="btn-icon">▶</span> Start Focus';
         this.elements.pauseBtn.style.display = 'none';
-        document.title = 'FocusFlow - ADHD-Friendly Focus Timer';
+        document.title = 'Nudge - ADHD-Friendly Focus Timer';
 
         // Reset ambient background
         this.setAmbientClass(null);

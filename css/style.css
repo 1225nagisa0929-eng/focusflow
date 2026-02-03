@@ -198,9 +198,6 @@ body.ambient-long-break {
     display: flex;
     align-items: center;
     gap: var(--space-sm);
-    font-weight: 700;
-    font-size: var(--font-size-xl);
-    color: var(--gray-900);
     text-decoration: none;
     transition: transform var(--transition-fast);
 }
@@ -209,8 +206,12 @@ body.ambient-long-break {
     transform: scale(1.02);
 }
 
-.logo {
-    font-size: var(--font-size-2xl);
+/* Modern Wordmark Logo */
+.brand-name {
+    font-weight: 800;
+    font-size: 1.5rem;
+    letter-spacing: -0.02em;
+    color: #1a1a1a;
 }
 
 .nav-links {
@@ -820,7 +821,7 @@ body.ambient-long-break {
     color: var(--gray-100);
 }
 
-/* Features Section - Bento Grid */
+/* Features Section - Premium Bento Grid */
 .features {
     padding: var(--space-3xl) 0;
 }
@@ -844,25 +845,22 @@ body.ambient-long-break {
     margin: 0 auto var(--space-2xl);
 }
 
-/* Bento Grid Layout */
+/* Premium Bento Grid Layout - 3 Column */
 .features-grid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    grid-template-rows: auto auto auto;
-    gap: var(--space-lg);
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
     max-width: 1000px;
     margin: 0 auto;
 }
 
-/* Bento Grid Card Placement */
+/* Premium Card Design */
 .feature-card {
-    padding: var(--space-xl);
-    background: rgba(255, 255, 255, 0.8);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    border-radius: var(--radius-xl);
-    box-shadow: var(--shadow-sm);
-    border: 1px solid rgba(255, 255, 255, 0.5);
+    padding: 2.5rem;
+    background: #ffffff;
+    border-radius: 1.5rem;
+    box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.05);
+    border: 1px solid rgba(0, 0, 0, 0.04);
     transition: transform var(--transition-base), box-shadow var(--transition-base);
     display: flex;
     flex-direction: column;
@@ -871,95 +869,60 @@ body.ambient-long-break {
     overflow: hidden;
 }
 
-/* Large cards span 2 columns */
+/* First card (AI/Flexible) spans 2 columns */
 .feature-card:nth-child(1) {
     grid-column: span 2;
-    grid-row: span 1;
-    background: linear-gradient(135deg, rgba(238, 242, 255, 0.9) 0%, rgba(224, 231, 255, 0.9) 100%);
-}
-
-.feature-card:nth-child(2) {
-    grid-column: span 1;
-    grid-row: span 2;
-    background: linear-gradient(180deg, rgba(240, 253, 244, 0.9) 0%, rgba(220, 252, 231, 0.9) 100%);
-}
-
-.feature-card:nth-child(3) {
-    grid-column: span 1;
-    grid-row: span 1;
-    background: linear-gradient(135deg, rgba(255, 247, 237, 0.9) 0%, rgba(254, 243, 199, 0.9) 100%);
-}
-
-.feature-card:nth-child(4) {
-    grid-column: span 2;
-    grid-row: span 1;
-    background: linear-gradient(135deg, rgba(240, 249, 255, 0.9) 0%, rgba(224, 242, 254, 0.9) 100%);
-}
-
-.feature-card:nth-child(5) {
-    grid-column: span 1;
-    grid-row: span 1;
-    background: linear-gradient(135deg, rgba(253, 242, 248, 0.9) 0%, rgba(252, 231, 243, 0.9) 100%);
-}
-
-.feature-card:nth-child(6) {
-    grid-column: span 1;
-    grid-row: span 1;
-    background: linear-gradient(135deg, rgba(245, 243, 255, 0.9) 0%, rgba(237, 233, 254, 0.9) 100%);
-    position: relative;
 }
 
 .feature-card:hover {
-    transform: translateY(-4px) scale(1.01);
-    box-shadow: var(--shadow-lg);
+    transform: translateY(-6px);
+    box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.08);
 }
 
-/* Large Icon Style */
+/* Premium Icon Style */
 .feature-icon {
-    font-size: 3.5rem;
-    margin-bottom: var(--space-lg);
+    font-size: 2.5rem;
+    margin-bottom: 1.25rem;
     display: block;
     line-height: 1;
+    filter: saturate(0.9);
 }
 
-/* Cards with larger space get bigger icons */
-.feature-card:nth-child(1) .feature-icon,
-.feature-card:nth-child(2) .feature-icon,
-.feature-card:nth-child(4) .feature-icon {
-    font-size: 4rem;
+/* Large card gets bigger icon */
+.feature-card:nth-child(1) .feature-icon {
+    font-size: 3rem;
 }
 
+/* Premium Typography */
 .feature-card h3 {
-    font-size: var(--font-size-xl);
-    color: var(--gray-900);
-    margin-bottom: var(--space-sm);
-    font-weight: 600;
-}
-
-.feature-card:nth-child(1) h3,
-.feature-card:nth-child(2) h3,
-.feature-card:nth-child(4) h3 {
-    font-size: var(--font-size-2xl);
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #1a1a1a;
+    margin-bottom: 0.75rem;
+    letter-spacing: -0.01em;
 }
 
 .feature-card p {
-    color: var(--gray-600);
+    font-size: 1rem;
+    color: #666666;
     line-height: 1.6;
     flex-grow: 1;
 }
 
+/* PRO Badge - Premium Style */
 .pro-badge {
     display: inline-block;
-    padding: 4px 10px;
+    padding: 5px 12px;
     background: linear-gradient(135deg, var(--primary-500), var(--accent-500));
     color: white;
-    font-size: var(--font-size-xs);
-    font-weight: 600;
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
     border-radius: var(--radius-full);
-    margin-bottom: var(--space-sm);
     position: absolute;
-    top: var(--space-md);
-    right: var(--space-md);
+    top: 1.5rem;
+    right: 1.5rem;
 }
 
 /* Responsive Bento Grid */
@@ -968,34 +931,31 @@ body.ambient-long-break {
         grid-template-columns: repeat(2, 1fr);
     }
 
-    .feature-card:nth-child(1),
-    .feature-card:nth-child(4) {
+    .feature-card:nth-child(1) {
         grid-column: span 2;
-    }
-
-    .feature-card:nth-child(2) {
-        grid-column: span 1;
-        grid-row: span 1;
     }
 }
 
 @media (max-width: 600px) {
     .features-grid {
         grid-template-columns: 1fr;
+        gap: 1rem;
     }
 
-    .feature-card:nth-child(1),
-    .feature-card:nth-child(2),
-    .feature-card:nth-child(3),
-    .feature-card:nth-child(4),
-    .feature-card:nth-child(5),
-    .feature-card:nth-child(6) {
+    .feature-card {
+        padding: 2rem;
+    }
+
+    .feature-card:nth-child(1) {
         grid-column: span 1;
-        grid-row: span 1;
     }
 
     .feature-icon {
-        font-size: 3rem !important;
+        font-size: 2rem !important;
+    }
+
+    .feature-card h3 {
+        font-size: 1.25rem;
     }
 }
 
@@ -1199,8 +1159,13 @@ body.ambient-long-break {
     display: flex;
     align-items: center;
     gap: var(--space-sm);
-    font-weight: 600;
-    color: var(--gray-700);
+}
+
+.footer-brand .brand-name {
+    font-weight: 800;
+    font-size: 1.25rem;
+    letter-spacing: -0.02em;
+    color: #1a1a1a;
 }
 
 .footer-links {
