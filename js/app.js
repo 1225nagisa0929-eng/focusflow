@@ -1,17 +1,25 @@
 /**
- * FocusFlow - Main Application
+ * Nudge - Main Application
  * ADHD-Friendly Focus Timer
  */
 
-class FocusFlowApp {
+class NudgeApp {
     constructor() {
         this.timer = null;
+        this.auth = null;
         this.currentView = 'landing'; // 'landing' or 'timer'
     }
 
-    init() {
+    async init() {
         // Initialize storage
         Storage.init();
+
+        // Initialize authentication
+        this.auth = new NudgeAuth();
+        window.nudgeAuth = this.auth;
+
+        // Wait a bit for auth to initialize
+        await new Promise(resolve => setTimeout(resolve, 100));
 
         // Initialize payment
         Payment.init();
@@ -25,10 +33,25 @@ class FocusFlowApp {
         // Request notification permission
         this.requestNotificationPermission();
 
-        // Check if returning user - show timer directly
-        if (Storage.getStats().allTimeSessions > 0) {
-            // Returning user, but still show landing first
-            // They can click to start
+        // Listen for auth changes
+        this.auth.onAuthChange((user, event) => {
+            this.handleAuthChange(user, event);
+        });
+    }
+
+    handleAuthChange(user, event) {
+        // Update payment UI when auth changes
+        if (Payment.updatePaymentUI) {
+            Payment.updatePaymentUI();
+        }
+
+        // If user just signed in, check their Pro status
+        if (event === 'SIGNED_IN' && user) {
+            const isPro = user.user_metadata?.is_pro ||
+                         localStorage.getItem('nudge_is_pro') === 'true';
+            if (isPro) {
+                Payment.updateProUI();
+            }
         }
     }
 
@@ -142,6 +165,22 @@ class FocusFlowApp {
                 }
             }
         });
+
+        // User menu dropdown toggle (for mobile)
+        const userMenuTrigger = document.getElementById('user-menu-trigger');
+        const userDropdown = document.getElementById('user-dropdown');
+        if (userMenuTrigger && userDropdown) {
+            userMenuTrigger.addEventListener('click', () => {
+                userDropdown.classList.toggle('show');
+            });
+
+            // Close dropdown when clicking outside
+            document.addEventListener('click', (e) => {
+                if (!e.target.closest('.user-menu')) {
+                    userDropdown.classList.remove('show');
+                }
+            });
+        }
     }
 
     showTimer(pushState = true) {
@@ -208,7 +247,7 @@ class FocusFlowApp {
 
 // Initialize app when DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
-    window.app = new FocusFlowApp();
+    window.app = new NudgeApp();
     window.app.init();
 
     // Check URL hash
@@ -230,6 +269,6 @@ window.addEventListener('beforeinstallprompt', (e) => {
 
 // Track successful installation
 window.addEventListener('appinstalled', () => {
-    console.log('FocusFlow installed successfully');
+    console.log('Nudge installed successfully');
     deferredPrompt = null;
 });
