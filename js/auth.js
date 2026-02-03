@@ -5,13 +5,14 @@
 
 class NudgeAuth {
     constructor() {
-        // Supabase configuration - these will be loaded from environment
-        this.supabaseUrl = window.SUPABASE_URL || '';
-        this.supabaseAnonKey = window.SUPABASE_ANON_KEY || '';
+        // Supabase configuration - will be loaded from API
+        this.supabaseUrl = '';
+        this.supabaseAnonKey = '';
         this.supabase = null;
         this.user = null;
         this.session = null;
         this.listeners = [];
+        this.configLoaded = false;
 
         // DOM Elements
         this.elements = {
@@ -32,9 +33,46 @@ class NudgeAuth {
         this.init();
     }
 
+    async loadConfig() {
+        // Try multiple sources for configuration
+        // 1. First check window globals (for local dev or inline scripts)
+        if (window.SUPABASE_URL && window.SUPABASE_ANON_KEY) {
+            this.supabaseUrl = window.SUPABASE_URL;
+            this.supabaseAnonKey = window.SUPABASE_ANON_KEY;
+            console.log('Config loaded from window globals');
+            return true;
+        }
+
+        // 2. Try loading from API endpoint (for Vercel deployment)
+        try {
+            const response = await fetch('/api/config');
+            if (response.ok) {
+                const config = await response.json();
+                if (config.supabaseUrl && config.supabaseAnonKey) {
+                    this.supabaseUrl = config.supabaseUrl;
+                    this.supabaseAnonKey = config.supabaseAnonKey;
+                    // Also store Stripe key if available
+                    if (config.stripePublicKey) {
+                        window.STRIPE_PUBLIC_KEY = config.stripePublicKey;
+                    }
+                    console.log('Config loaded from API');
+                    return true;
+                }
+            }
+        } catch (error) {
+            console.warn('Failed to load config from API:', error);
+        }
+
+        console.error('Supabase configuration not found. Please set environment variables.');
+        return false;
+    }
+
     async init() {
+        // Load configuration first
+        this.configLoaded = await this.loadConfig();
+
         // Initialize Supabase client
-        if (this.supabaseUrl && this.supabaseAnonKey) {
+        if (this.configLoaded && this.supabaseUrl && this.supabaseAnonKey) {
             const { createClient } = await import('https://esm.sh/@supabase/supabase-js@2');
             this.supabase = createClient(this.supabaseUrl, this.supabaseAnonKey);
 
@@ -128,7 +166,11 @@ class NudgeAuth {
 
     async signInWithMagicLink() {
         if (!this.supabase) {
-            this.showMessage('Authentication not configured', 'error');
+            this.showMessage('Authentication service is loading... Please try again in a moment.', 'error');
+            // Try to reload config
+            if (!this.configLoaded) {
+                await this.init();
+            }
             return;
         }
 

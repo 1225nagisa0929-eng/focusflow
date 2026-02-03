@@ -7,16 +7,9 @@ const Payment = {
     stripe: null,
     auth: null,
 
-    init() {
-        // Initialize Stripe with publishable key from environment
-        const stripeKey = window.STRIPE_PUBLISHABLE_KEY;
-        if (stripeKey && stripeKey !== '' && !stripeKey.includes('VITE_')) {
-            try {
-                this.stripe = Stripe(stripeKey);
-            } catch (e) {
-                console.log('Stripe initialization failed:', e);
-            }
-        }
+    async init() {
+        // Initialize Stripe - try window global first, then wait for config from API
+        await this.initStripe();
 
         this.bindEvents();
 
@@ -25,6 +18,26 @@ const Payment = {
             this.auth = window.nudgeAuth;
             this.updatePaymentUI();
         }, 100);
+    },
+
+    async initStripe() {
+        // Try window global first (set by auth.js from API config)
+        let stripeKey = window.STRIPE_PUBLISHABLE_KEY || window.STRIPE_PUBLIC_KEY;
+
+        // If not available, wait a bit for auth.js to load config
+        if (!stripeKey) {
+            await new Promise(resolve => setTimeout(resolve, 500));
+            stripeKey = window.STRIPE_PUBLISHABLE_KEY || window.STRIPE_PUBLIC_KEY;
+        }
+
+        if (stripeKey && stripeKey !== '' && !stripeKey.includes('VITE_')) {
+            try {
+                this.stripe = Stripe(stripeKey);
+                console.log('Stripe initialized successfully');
+            } catch (e) {
+                console.log('Stripe initialization failed:', e);
+            }
+        }
     },
 
     bindEvents() {
